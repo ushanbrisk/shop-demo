@@ -46,6 +46,14 @@ public interface CartMapper {
     int updateById(Cart cart);
 
     /**
+     * 根据ID查询购物车项
+     *
+     * @param id 购物车ID
+     * @return 购物车项
+     */
+    Cart selectById(@Param("id") Long id);
+
+    /**
      * 删除购物车项
      *
      * @param id 购物车ID

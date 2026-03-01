@@ -22,6 +22,11 @@
         WHERE user_id = #{userId} AND product_id = #{productId}
     </select>
 
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM carts
+        WHERE id = #{id}
+    </select>
+
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO carts (user_id, product_id, quantity, create_time, update_time)
         VALUES (#{userId}, #{productId}, #{quantity}, NOW(), NOW())
