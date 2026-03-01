@@ -64,7 +64,29 @@ sudo systemctl start mysql
 - 创建 6 张数据表 (users, categories, products, carts, orders, order_items)
 - 插入初始测试数据
 
+
+可能报错:
+运行
+# 1. 用 sudo 无密码进入 MySQL
+sudo mysql
+
+# 2. 在 MySQL 命令行中执行（将 '你的新密码' 替换为强密码）：
+ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '你的新密码';
+# 或兼容旧客户端的命令：
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '你的新密码';
+
+# 3. 刷新权限
+FLUSH PRIVILEGES;
+
+# 4. 退出
+EXIT;
+
+
+
 执行方式：
+
+
+
 
 ```bash
 # 方式一：使用命令行执行
