@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Demo 电商平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        a:hover {
+            color: #ff6600;
+        }
+
+        /* 顶部导航 */
+        .top-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .top-bar-inner {
+            width: 1200px;
+            margin: 0 auto;
+            height: 35px;
+            line-height: 35px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .top-bar-left span, .top-bar-right a {
+            margin-right: 15px;
+            color: #999;
+        }
+
+        .top-bar-right a:hover {
+            color: #ff6600;
+        }
+
+        .top-bar-right .login-btn {
+            color: #ff6600;
+        }
+
+        /* 搜索区域 */
+        .search-bar {
+            background: #fff;
+            padding: 20px 0;
+        }
+
+        .search-bar-inner {
+            width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 200px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6600;
+            margin-right: 100px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #ff6600;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .search-box {
+            flex: 1;
+            display: flex;
+            max-width: 600px;
+        }
+
+        .search-input {
+            flex: 1;
+            height: 40px;
+            border: 2px solid #ff6600;
+            border-radius: 4px 0 0 4px;
+            padding: 0 15px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-btn {
+            width: 100px;
+            height: 40px;
+            background: #ff6600;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .search-btn:hover {
+            background: #e65c00;
+        }
+
+        .cart-icon {
+            width: 120px;
+            height: 40px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 20px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .cart-icon:hover {
+            border-color: #ff6600;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff6600;
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        /* 分类导航 */
+        .category-bar {
+            background: #fff;
+            border-bottom: 2px solid #ff6600;
+        }
+
+        .category-bar-inner {
+            width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            height: 35px;
+            line-height: 35px;
+        }
+
+        .category-title {
+            width: 200px;
+            background: #ff6600;
+            color: #fff;
+            font-size: 14px;
+            padding: 0 15px;
+            font-weight: bold;
+        }
+
+        .category-list {
+            display: flex;
+            flex: 1;
+        }
+
+        .category-list a {
+            padding: 0 25px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .category-list a:hover {
+            color: #ff6600;
+        }
+
+        /* 主体内容 */
+        .main-content {
+            width: 1200px;
+            margin: 20px auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* 左侧分类 */
+        .left-category {
+            width: 200px;
+            background: #fff;
+            padding: 15px 0;
+        }
+
+        .left-category-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .left-category-item:hover {
+            background: #fff5e6;
+        }
+
+        .left-category-item:hover .sub-category {
+            display: block;
+        }
+
+        .left-category-item span {
+            font-size: 13px;
+        }
+
+        .sub-category {
+            display: none;
+            position: absolute;
+            left: 200px;
+            top: 0;
+            width: 800px;
+            background: #fff;
+            min-height: 400px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .sub-category-group {
+            margin-bottom: 15px;
+        }
+
+        .sub-category-title {
+            font-weight: bold;
+            color: #ff6600;
+            margin-bottom: 10px;
+        }
+
+        .sub-category-item {
+            display: inline-block;
+            margin-right: 15px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        /* 右侧内容 */
+        .right-content {
+            flex: 1;
+        }
+
+        /* 轮播图 */
+        .banner {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #ff6600 0%, #ff8533 50%, #ffa366 100%);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+        }
+
+        .banner-text h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .banner-text p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        /* 商品网格 */
+        .product-section {
+            margin-top: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 15px 0;
+            border-bottom: 2px solid #ff6600;
+            margin-bottom: 15px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-size: 14px;
+            height: 40px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .product-price {
+            color: #ff6600;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .product-price .original-price {
+            font-size: 12px;
+            color: #999;
+            text-decoration: line-through;
+            font-weight: normal;
+            margin-left: 10px;
+        }
+
+        .product-sales {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .product-shop {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* 底部 */
+        .footer {
+            background: #fff;
+            margin-top: 40px;
+            padding: 30px 0;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .footer-inner {
+            width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: #666;
+            margin: 0 15px;
+            font-size: 13px;
+        }
+
+        .footer-links a:hover {
+            color: #ff6600;
+        }
+
+        .footer-copy {
+            color: #999;
+            font-size: 12px;
+        }
+
+        /* 加载中 */
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+        }
+
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0 10px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6600;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 40px;
+            background: #ff6600;
+            border: none;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #e65c00;
+        }
+
+        .switch-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .switch-link a {
+            color: #ff6600;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <div class="top-bar">
+        <div class="top-bar-inner">
+            <div class="top-bar-left">
+                <span>欢迎来到 Shop Demo 电商平台</span>
+            </div>
+            <div class="top-bar-right">
+                <a href="#" onclick="showLoginModal()" class="login-btn" id="loginLink">登录</a>
+                <a href="#" onclick="showRegisterModal()" id="registerLink">免费注册</a>
+                <a href="#">我的订单</a>
+                <a href="#">我的收藏</a>
+                <a href="#">联系客服</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜索区域 -->
+    <div class="search-bar">
+        <div class="search-bar-inner">
+            <div class="logo">
+                <div class="logo-icon">S</div>
+                Shop Demo
+            </div>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="搜索商品" id="searchInput">
+                <button class="search-btn" onclick="searchProducts()">搜索</button>
+            </div>
+            <div class="cart-icon" onclick="showCart()">
+                <span>🛒 购物车</span>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分类导航 -->
+    <div class="category-bar">
+        <div class="category-bar-inner">
+            <div class="category-title">商品分类</div>
+            <div class="category-list">
+                <a href="#" onclick="loadProducts()">首页</a>
+                <a href="#" id="nav-categories"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="main-content">
+        <!-- 左侧分类 -->
+        <div class="left-category" id="leftCategoryList">
+            <div class="loading">加载中...</div>
+        </div>
+
+        <!-- 右侧内容 -->
+        <div class="right-content">
+            <!-- 轮播图 -->
+            <div class="banner">
+                <div class="banner-text">
+                    <h1>Shop Demo</h1>
+                    <p>优质商品 限时特惠</p>
+                </div>
+            </div>
+
+            <!-- 商品列表 -->
+            <div class="product-section">
+                <div class="section-title">热门推荐</div>
+                <div class="product-grid" id="productGrid">
+                    <div class="loading">加载中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <div class="footer-inner">
+            <div class="footer-links">
+                <a href="#">关于我们</a>
+                <a href="#">联系我们</a>
+                <a href="#">商家入驻</a>
+                <a href="#">帮助中心</a>
+                <a href="#">隐私政策</a>
+            </div>
+            <div class="footer-copy">
+                © 2026 Shop Demo. All rights reserved.
+            </div>
+        </div>
+    </div>
+
+    <!-- 登录模态框 -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-title">登录</div>
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" id="loginUsername" placeholder="请输入用户名">
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="loginPassword" placeholder="请输入密码">
+            </div>
+            <button class="submit-btn" onclick="doLogin()">登录</button>
+            <div class="switch-link">
+                还没有账号？<a href="#" onclick="switchToRegister()">立即注册</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-title">注册</div>
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" id="regUsername" placeholder="请输入用户名">
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="regPassword" placeholder="请输入密码">
+            </div>
+            <div class="form-group">
+                <label>邮箱</label>
+                <input type="email" id="regEmail" placeholder="请输入邮箱">
+            </div>
+            <button class="submit-btn" onclick="doRegister()">注册</button>
+            <div class="switch-link">
+                已有账号？<a href="#" onclick="switchToLogin()">立即登录</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let cartItems = [];
+
+        // 加载商品列表
+        async function loadProducts() {
+            try {
+                const response = await fetch('/api/products');
+                const result = await response.json();
+                if (result.code === 200) {
+                    renderProducts(result.data);
+                }
+            } catch (error) {
+                console.error('加载商品失败:', error);
+                document.getElementById('productGrid').innerHTML = '<div class="loading">加载失败</div>';
+            }
+        }
+
+        // 渲染商品列表
+        function renderProducts(products, title = '热门推荐') {
+            const grid = document.getElementById('productGrid');
+            document.querySelector('.section-title').textContent = title;
+
+            if (!products || products.length === 0) {
+                grid.innerHTML = '<div class="loading">暂无商品</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map(product => `
+                <div class="product-card" onclick="addToCart(${product.id})">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200'">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">${product.description || product.name}</div>
+                        <div class="product-price">
+                            ¥${product.price}
+                            <span class="original-price">¥${(product.price * 1.2).toFixed(2)}</span>
+                        </div>
+                        <div class="product-sales">已售 ${Math.floor(Math.random() * 1000)} 件</div>
+                        <div class="product-shop">${product.categoryName || '官方旗舰店'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 加载分类列表
+        async function loadCategories() {
+            try {
+                const response = await fetch('/api/categories');
+                const result = await response.json();
+                if (result.code === 200) {
+                    renderCategories(result.data);
+                }
+            } catch (error) {
+                console.error('加载分类失败:', error);
+            }
+        }
+
+        // 渲染分类
+        function renderCategories(categories) {
+            // 只显示一级分类（parentId为0或null的）
+            const topCategories = categories.filter(c => !c.parentId || c.parentId === 0);
+
+            // 渲染顶部导航
+            const navContainer = document.getElementById('nav-categories');
+            navContainer.innerHTML = topCategories.map(cat =>
+                `<a href="#" onclick="loadProductsByCategory(${cat.id}, '${cat.name}')">${cat.name}</a>`
+            ).join('');
+
+            // 渲染左侧分类
+            const leftContainer = document.getElementById('leftCategoryList');
+            leftContainer.innerHTML = topCategories.map(cat =>
+                `<div class="left-category-item" onclick="loadProductsByCategory(${cat.id}, '${cat.name}')">
+                    <span>${cat.name}</span>
+                    <span>›</span>
+                </div>`
+            ).join('');
+        }
+
+        // 根据分类加载商品
+        async function loadProductsByCategory(categoryId, categoryName) {
+            try {
+                const response = await fetch(`/api/products/category/${categoryId}`);
+                const result = await response.json();
+                if (result.code === 200) {
+                    renderProducts(result.data, categoryName + ' - 商品列表');
+                }
+            } catch (error) {
+                console.error('加载分类商品失败:', error);
+                document.getElementById('productGrid').innerHTML = '<div class="loading">加载失败</div>';
+            }
+        }
+
+        // 搜索商品
+        async function searchProducts() {
+            const keyword = document.getElementById('searchInput').value;
+            if (!keyword) return;
+
+            try {
+                const response = await fetch(`/api/products/search?keyword=${encodeURIComponent(keyword)}`);
+                const result = await response.json();
+                if (result.code === 200) {
+                    renderProducts(result.data);
+                }
+            } catch (error) {
+                console.error('搜索失败:', error);
+            }
+        }
+
+        // 搜索框回车事件
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchProducts();
+            }
+        });
+
+        // 显示登录模态框
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('show');
+        }
+
+        // 显示注册模态框
+        function showRegisterModal() {
+            document.getElementById('registerModal').classList.add('show');
+        }
+
+        // 切换到注册
+        function switchToRegister() {
+            document.getElementById('loginModal').classList.remove('show');
+            showRegisterModal();
+        }
+
+        // 切换到登录
+        function switchToLogin() {
+            document.getElementById('registerModal').classList.remove('show');
+            showLoginModal();
+        }
+
+        // 执行登录
+        async function doLogin() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                alert('请输入用户名和密码');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/users/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+                if (result.code === 200) {
+                    currentUser = username;
+                    localStorage.setItem('token', result.data);
+                    localStorage.setItem('username', username);
+                    document.getElementById('loginModal').classList.remove('show');
+                    updateUserUI();
+                    alert('登录成功！');
+                } else {
+                    alert(result.message || '登录失败');
+                }
+            } catch (error) {
+                alert('登录失败，请稍后重试');
+            }
+        }
+
+        // 执行注册
+        async function doRegister() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const email = document.getElementById('regEmail').value;
+
+            if (!username || !password) {
+                alert('请输入用户名和密码');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/users/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, email })
+                });
+                const result = await response.json();
+                if (result.code === 200) {
+                    alert('注册成功，请登录！');
+                    switchToLogin();
+                } else {
+                    alert(result.message || '注册失败');
+                }
+            } catch (error) {
+                alert('注册失败，请稍后重试');
+            }
+        }
+
+        // 更新用户UI
+        function updateUserUI() {
+            const token = localStorage.getItem('token');
+            const username = localStorage.getItem('username');
+            if (token && username) {
+                currentUser = username;
+                document.getElementById('loginLink').textContent = username;
+                document.getElementById('loginLink').onclick = null;
+                document.getElementById('registerLink').textContent = '退出';
+                document.getElementById('registerLink').onclick = function() {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('username');
+                    currentUser = null;
+                    document.getElementById('loginLink').textContent = '登录';
+                    document.getElementById('loginLink').onclick = showLoginModal;
+                    document.getElementById('registerLink').textContent = '免费注册';
+                    document.getElementById('registerLink').onclick = showRegisterModal;
+                };
+            }
+        }
+
+        // 加入购物车
+        async function addToCart(productId) {
+            if (!currentUser) {
+                alert('请先登录');
+                showLoginModal();
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-User-Id': localStorage.getItem('userId') || '1'
+                    },
+                    body: JSON.stringify({ productId, quantity: 1 })
+                });
+                const result = await response.json();
+                if (result.code === 200) {
+                    cartItems.push(productId);
+                    document.getElementById('cartCount').textContent = cartItems.length;
+                    alert('已添加到购物车！');
+                } else {
+                    alert(result.message || '添加失败');
+                }
+            } catch (error) {
+                alert('添加失败，请稍后重试');
+            }
+        }
+
+        // 显示购物车
+        function showCart() {
+            if (!currentUser) {
+                alert('请先登录');
+                showLoginModal();
+                return;
+            }
+            alert('购物车功能开发中...');
+        }
+
+        // 点击模态框外部关闭
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+
+        document.getElementById('registerModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+
+        // 页面加载完成后获取商品列表和分类
+        window.onload = function() {
+            loadProducts();
+            loadCategories();
+            updateUserUI();
+        };
+    </script>
+</body>
+</html>
