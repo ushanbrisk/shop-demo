@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.demo.dao.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.shop.demo.model.entity.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="avatar" property="avatar"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM users
+        WHERE id = #{id} AND is_deleted = 0
+    </select>
+
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        SELECT * FROM users
+        WHERE username = #{username} AND is_deleted = 0
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (username, password, email, phone, status, create_time, update_time, is_deleted)
+        VALUES (#{username}, #{password}, #{email}, #{phone}, #{status}, NOW(), NOW(), 0)
+    </insert>
+
+    <update id="updateById">
+        UPDATE users
+        <set>
+            <if test="user.username != null">username = #{user.username},</if>
+            <if test="user.password != null">password = #{user.password},</if>
+            <if test="user.email != null">email = #{user.email},</if>
+            <if test="user.phone != null">phone = #{user.phone},</if>
+            <if test="user.avatar != null">avatar = #{user.avatar},</if>
+            <if test="user.status != null">status = #{user.status},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{user.id} AND is_deleted = 0
+    </update>
+
+    <update id="deleteById">
+        UPDATE users
+        SET is_deleted = 1, update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>

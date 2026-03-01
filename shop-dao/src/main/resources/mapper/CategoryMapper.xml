@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.demo.dao.mapper.CategoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.shop.demo.model.entity.Category">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="sort" property="sort"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM categories
+        WHERE id = #{id} AND is_deleted = 0
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT * FROM categories
+        WHERE is_deleted = 0
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO categories (name, parent_id, sort, create_time, update_time, is_deleted)
+        VALUES (#{name}, #{parentId}, #{sort}, NOW(), NOW(), 0)
+    </insert>
+
+    <update id="updateById">
+        UPDATE categories
+        <set>
+            <if test="category.name != null">name = #{category.name},</if>
+            <if test="category.parentId != null">parent_id = #{category.parentId},</if>
+            <if test="category.sort != null">sort = #{category.sort},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{category.id} AND is_deleted = 0
+    </update>
+
+    <update id="deleteById">
+        UPDATE categories
+        SET is_deleted = 1, update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>

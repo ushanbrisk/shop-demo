@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.demo.dao.mapper.ProductMapper">
+
+    <resultMap id="BaseResultMap" type="com.shop.demo.model.entity.Product">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="price" property="price"/>
+        <result column="stock" property="stock"/>
+        <result column="image" property="image"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+
+    <resultMap id="VOResultMap" type="com.shop.demo.model.vo.ProductVO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="price" property="price"/>
+        <result column="stock" property="stock"/>
+        <result column="image" property="image"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM products
+        WHERE id = #{id} AND is_deleted = 0
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT * FROM products
+        WHERE is_deleted = 0 AND status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectByCategoryId" resultMap="BaseResultMap">
+        SELECT * FROM products
+        WHERE category_id = #{categoryId} AND is_deleted = 0 AND status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="search" resultMap="BaseResultMap">
+        SELECT * FROM products
+        WHERE (name LIKE CONCAT('%', #{keyword}, '%') OR description LIKE CONCAT('%', #{keyword}, '%'))
+          AND is_deleted = 0 AND status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectVOList" resultMap="VOResultMap">
+        SELECT p.*, c.name as category_name
+        FROM products p
+                 LEFT JOIN categories c ON p.category_id = c.id
+        WHERE p.is_deleted = 0 AND p.status = 1
+        ORDER BY p.create_time DESC
+    </select>
+
+    <select id="selectVOById" resultMap="VOResultMap">
+        SELECT p.*, c.name as category_name
+        FROM products p
+                 LEFT JOIN categories c ON p.category_id = c.id
+        WHERE p.id = #{id} AND p.is_deleted = 0
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO products (name, description, category_id, price, stock, image, status, create_time, update_time, is_deleted)
+        VALUES (#{name}, #{description}, #{categoryId}, #{price}, #{stock}, #{image}, #{status}, NOW(), NOW(), 0)
+    </insert>
+
+    <update id="updateById">
+        UPDATE products
+        <set>
+            <if test="product.name != null">name = #{product.name},</if>
+            <if test="product.description != null">description = #{product.description},</if>
+            <if test="product.categoryId != null">category_id = #{product.categoryId},</if>
+            <if test="product.price != null">price = #{product.price},</if>
+            <if test="product.stock != null">stock = #{product.stock},</if>
+            <if test="product.image != null">image = #{product.image},</if>
+            <if test="product.status != null">status = #{product.status},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{product.id} AND is_deleted = 0
+    </update>
+
+    <update id="deleteById">
+        UPDATE products
+        SET is_deleted = 1, update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>
